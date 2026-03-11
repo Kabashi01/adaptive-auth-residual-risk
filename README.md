@@ -1,37 +1,18 @@
-# Residual Risk–Aware Adaptive Authentication (SMT Models + Artifacts)
+# Residual-Risk-Aware Adaptive Authentication + Adaptive Authorization (Z3 / SMT-LIB)
 
-This repository contains SMT-LIB models and supporting artifacts for **Residual Risk–Aware Adaptive Authentication** and **post-authentication Adaptive Authorization**. The models use **Z3** to (i) select authentication methods under contextual conditions and multi-objective requirements, and (ii) compute **residual risk** and recommend authorization configurations that contain impact while preserving essential functionality.
+This repository contains:
+- **Phase 1 (Adaptive Authentication model)**: an SMT-LIB model that selects an authentication method by maximizing goal satisfaction (Security, Usability, Performance) while accounting for context and attack likelihoods.
+- **Phase 2 (Residual Risk + Adaptive Authorization model)**: an SMT-LIB model that **freezes** the chosen authentication method and context, then reasons about **residual risk** and **permission/operation tightening** (authorization) to contain impact.
+- **Python runner**: a script that automates Phase 1 (searching for a best utility threshold) and Phase 2 (enumerating alternative authorization configurations and reporting results). It also supports an **ABAC-style baseline**.
 
-## Contents
+> If you prefer running everything manually, you can still use these models directly with `z3 -smt2` by adding your own `(assert ...)`, `(check-sat)` and `(get-value ...)` commands.
 
-### SMT Models
-- **Adaptive Authentication model (Phase 1)**  
-  Selects an authentication method by balancing:
-  - Security (Authenticity, Confidentiality, Integrity)
-  - Usability (Effectiveness, Efficiency)
-  - Performance  
-  and accounts for contextual factors and attack likelihoods.
+---
 
-- **Residual Risk + Authorization model (Phase 2)**  
-  Freezes the authentication decision from Phase 1 and computes:
-  - Total/Residual risk under modeled attacks
-  - Asset-value weighted risk
-  - Permission and operation restrictions
-  - Authorization penalty/containment cost
+## Repository structure
 
-### Key constraints included
-- **Permission gating constraint** (example):
-  - If an asset is enabled, `Read` must be enabled.
-  - If an asset is disabled, all CRUD permissions must be disabled.
+A typical layout is:
 
-```smt2
-;; If an asset is ON, Read must be ON; if OFF, all OFF
-(define-fun AssetPermGate ((a Real) (R Bool) (W Bool) (U Bool) (D Bool)) Bool
-  (ite (> a 0)
-       (= R true)
-       (and (= R false) (= W false) (= U false) (= D false))))
-
-##The Repository structure##
 .
 ├── Scenario1/
 │   ├── adapt_model_S1.smt2
@@ -42,13 +23,34 @@ This repository contains SMT-LIB models and supporting artifacts for **Residual 
 ├── Scenario3/
 │   ├── adapt_model_S3.smt2
 │   └── residual_model_S3.smt2
-├── Scenario4/ ...
-├── scripts/
-│   └── run_models.py
-├── results/
-│   └── (optional outputs: TSV/MD/JSONL)
-└── README.md
+├── Scenario4/
+│   ├── adapt_model_S4.smt2
+│   └── residual_model_S4.smt2
+├── Scenario5/
+│   ├── adapt_model_S5.smt2
+│   └── residual_model_S5.smt2
+├── Scenario6/
+│   ├── adapt_model_S6.smt2
+│   └── residual_model_S6.smt2
+└── scenario.py
+
+Where:
+- `adapt_model_S{sid}.smt2` = Phase-1 adaptive authentication model for scenario `sid`
+- `residual_model_S{sid}.smt2` = Phase-2 residual-risk + authorization model for scenario `sid`
+- `run_models.py` = runner (binary search in Phase 1 + progressive enumeration in Phase 2 + optional ABAC baseline)
+
+---
+
+## Requirements
+
+- You need the Z3 solver installed and available in your PATH.
+- Python 3.9+ recommended.
+
+## Common CLI options
+
+- Run the full pipeline: python3 run_models.py scenario_number
+- Run ABAC baseline in addition to your pipeline: python3 run_models.py scenario_number --baseline
+- Repeat runs (e.g., for overhead statistics): python3 run_models.py scenario_number --repeats 10 --warmup 1
 
 
-##How to run##
 
