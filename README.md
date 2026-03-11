@@ -5,7 +5,7 @@ This repository contains:
 - **Phase 2 (Residual Risk + Adaptive Authorization model)**: an SMT-LIB model that **freezes** the chosen authentication method and context, then reasons about **residual risk** and **permission/operation tightening** (authorization) to contain impact.
 - **Python runner**: a script that automates Phase 1 (searching for a best utility threshold) and Phase 2 (enumerating alternative authorization configurations and reporting results). It also supports an **ABAC-style baseline**.
 
-> If you prefer running everything manually, you can still use these models directly with `z3 -smt2` by adding your own `(assert ...)`, `(check-sat)` and `(get-value ...)` commands.
+> If you prefer running everything manually, you can still use these models directly with `z3 -smt2` by adding your own `(assert ...)`, `(check-sat)`, and `(get-value ...)` commands.
 
 ---
 
@@ -14,22 +14,22 @@ This repository contains:
 A typical layout is:
 
 .
-├── Scenario1/
+├── scenario1/
 │   ├── adapt_model_S1.smt2
 │   └── residual_model_S1.smt2
-├── Scenario2/
+├── scenario2/
 │   ├── adapt_model_S2.smt2
 │   └── residual_model_S2.smt2
-├── Scenario3/
+├── scenario3/
 │   ├── adapt_model_S3.smt2
 │   └── residual_model_S3.smt2
-├── Scenario4/
+├── scenario4/
 │   ├── adapt_model_S4.smt2
 │   └── residual_model_S4.smt2
-├── Scenario5/
+├── scenario5/
 │   ├── adapt_model_S5.smt2
 │   └── residual_model_S5.smt2
-├── Scenario6/
+├── scenario6/
 │   ├── adapt_model_S6.smt2
 │   └── residual_model_S6.smt2
 └── scenario.py
@@ -48,9 +48,10 @@ Where:
 
 ## Common CLI options
 
-- Run the full pipeline: python3 run_models.py scenario_number
-- Run ABAC baseline in addition to your pipeline: python3 run_models.py scenario_number --baseline
+- Run a single scenario (Phase-1 + Phase-2): python3 run_models.py scenario_number
+- Run with ABAC baseline too: python3 run_models.py scenario_number --baseline
 - Repeat runs (e.g., for overhead statistics): python3 run_models.py scenario_number --repeats 10 --warmup 1
+- Run baseline-only (skip Phase-1/Phase-2): python3 run_models.py scenario_number --baseline-only
 
 
 
