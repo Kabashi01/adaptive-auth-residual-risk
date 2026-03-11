@@ -1,45 +1,50 @@
+```text
 # Residual-Risk-Aware Adaptive Authentication + Adaptive Authorization (Z3 / SMT-LIB)
 
-This repository contains:
-- **Phase 1 (Adaptive Authentication model)**: an SMT-LIB model that selects an authentication method by maximizing goal satisfaction (Security, Usability, Performance) while accounting for context and attack likelihoods.
-- **Phase 2 (Residual Risk + Adaptive Authorization model)**: an SMT-LIB model that **freezes** the chosen authentication method and context, then reasons about **residual risk** and **permission/operation tightening** (authorization) to contain impact.
-- **Python runner**: a script that automates Phase 1 (searching for a best utility threshold) and Phase 2 (enumerating alternative authorization configurations and reporting results). It also supports an **ABAC-style baseline**.
 
-> If you prefer running everything manually, you can still use these models directly with `z3 -smt2` by adding your own `(assert ...)`, `(check-sat)`, and `(get-value ...)` commands.
+This repository contains:
+- Phase 1 (Adaptive Authentication model): an SMT-LIB model that selects an authentication method by maximizing goal satisfaction (Security, Usability, Performance) while accounting for context and attack likelihoods.
+- Phase 2 (Residual Risk + Adaptive Authorization model)**: an SMT-LIB model that freezes the chosen authentication method and context, then reasons about residual risk and permission/operation tightening (authorization) to contain impact.
+- Python runner: a script that automates Phase 1 (searching for a best utility threshold) and Phase 2 (enumerating alternative authorization configurations and reporting results). It also supports an ABAC-style baseline.
+
+- Python runner (`scenario.py`) 
+
+> You can also run the SMT models manually with `z3 -smt2 -in` by appending your own `(assert ...)`, `(check-sat)`, and `(get-value ...)` commands.
 
 ---
 
-## Repository structure
+## Repository layout
 
-A typical layout is:
 
 .
-├── scenario1/
+├── Scenario1/
 │   ├── adapt_model_S1.smt2
 │   └── residual_model_S1.smt2
-├── scenario2/
+├── Scenario2/
 │   ├── adapt_model_S2.smt2
 │   └── residual_model_S2.smt2
-├── scenario3/
+├── Scenario3/
 │   ├── adapt_model_S3.smt2
 │   └── residual_model_S3.smt2
-├── scenario4/
+├── Scenario4/
 │   ├── adapt_model_S4.smt2
 │   └── residual_model_S4.smt2
-├── scenario5/
+├── Scenario5/
 │   ├── adapt_model_S5.smt2
 │   └── residual_model_S5.smt2
-├── scenario6/
+├── Scenario6/
 │   ├── adapt_model_S6.smt2
 │   └── residual_model_S6.smt2
 └── scenario.py
 
+
+
 Where:
 - `adapt_model_S{sid}.smt2` = Phase-1 adaptive authentication model for scenario `sid`
 - `residual_model_S{sid}.smt2` = Phase-2 residual-risk + authorization model for scenario `sid`
-- `run_models.py` = runner (binary search in Phase 1 + progressive enumeration in Phase 2 + optional ABAC baseline)
+- `scenario.py` = runner (binary search in Phase 1 + progressive enumeration in Phase 2 + optional ABAC baseline)
 
----
+
 
 ## Requirements
 
