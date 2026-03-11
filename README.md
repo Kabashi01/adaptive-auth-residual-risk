@@ -1,4 +1,3 @@
-```text
 # Residual-Risk-Aware Adaptive Authentication + Adaptive Authorization (Z3 / SMT-LIB)
 
 
@@ -15,6 +14,7 @@ This repository contains:
 
 ## Repository layout
 
+```text
 
 .
 ├── Scenario1/
